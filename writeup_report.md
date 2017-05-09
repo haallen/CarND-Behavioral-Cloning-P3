@@ -1,13 +1,5 @@
 #**Behavioral Cloning** 
 
-##Writeup Template
-
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
----
-
-**Behavioral Cloning Project**
-
 The goals / steps of this project are the following:
 * Use the simulator to collect data of good driving behavior
 * Build, a convolution neural network in Keras that predicts steering angles from images
@@ -66,6 +58,7 @@ I preprocessed the data before running it through the network by first normalizi
 The model used an adam optimizer, so the learning rate was not tuned manually. 
 
 ####4. Appropriate training data
+
 I used all of the provided images (including left and right images) to train my network (after splitting 20% off for validation).
 Note: I did not have a joystick (or even a mouse), so recording my own training data did not seem like it would be beneficial. Plus my network did a pretty good job without the need to create more data.
 
