@@ -54,25 +54,20 @@ The model.py file contains the code for training and saving the convolution neur
 
 ####1. An appropriate model architecture has been employed
 
-My model consists of a convolution neural network with 3x3 filter sizes and depths between 32 and 128 (model.py lines 18-24) 
+My model is based on the NVIDIA architecture presented in the lecture videos. It consists of 5 convolutional layers followed by 4 fully connected layers. The 5 convolutional layers used varying filter sizes and depths as well as strides. 
 
-The model includes RELU layers to introduce nonlinearity (code line 20), and the data is normalized in the model using a Keras lambda layer (code line 18). 
+I preprocessed the data before running it through the network by first normalizing the pixel values to be between -0.5 and 0.5 and also by cropping the top and bottom of each image. 
 
 ####2. Attempts to reduce overfitting in the model
 
-The model contains dropout layers in order to reduce overfitting (model.py lines 21). 
-
-The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 10-16). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
 
 ####3. Model parameter tuning
 
-The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 25).
+The model used an adam optimizer, so the learning rate was not tuned manually. 
 
 ####4. Appropriate training data
-
-Training data was chosen to keep the vehicle driving on the road. I used a combination of center lane driving, recovering from the left and right sides of the road ... 
-
-For details about how I created the training data, see the next section. 
+I used all of the provided images (including left and right images) to train my network (after splitting 20% off for validation).
+Note: I did not have a joystick (or even a mouse), so recording my own training data did not seem like it would be beneficial. Plus my network did a pretty good job without the need to create more data.
 
 ###Model Architecture and Training Strategy
 
