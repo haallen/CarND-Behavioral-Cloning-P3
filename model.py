@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+The goals / steps of this project are the following:
 
+Use the simulator to collect data of good driving behavior
+Build, a convolution neural network in Keras that predicts steering angles from images
+Train and validate the model with a training and validation set
+Test that the model successfully drives around track one without leaving the road
+Summarize the results with a written report
 """
 
 import csv
@@ -147,7 +153,7 @@ history_object=model.fit_generator(train_generator,
                                    samples_per_epoch=len(train_samples)*6, 
                                    validation_data=validation_generator, 
                                    nb_val_samples=len(validation_samples)*6, 
-                                   nb_epoch=10)
+                                   nb_epoch=6)
 
 #create a plot of MSE loss vs epoch for training and validation runs
 import matplotlib.pyplot as plt
