@@ -10,13 +10,8 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[image1]: ./overfitting.png "Overfitting"
+[image2]: ./loss.png "Final loss function"
 
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -66,52 +61,36 @@ Note: I did not have a joystick (or even a mouse), so recording my own training 
 
 ####1. Solution Design Approach
 
-The overall strategy for deriving a model architecture was to ...
+The overall strategy for deriving a model architecture was to follow the approach described in the lecture videos. 
 
-My first step was to use a convolution neural network model similar to the ... I thought this model might be appropriate because ...
+My first step was to use a convolution neural network model similar to the Lenet-5 model from previous lessons (minus the max-pooling). I thought this model might be appropriate because it provides a way inputting images from the simulator into the network and outputting a predicted steering value based on those images. In previous lessons, the Lenet-5 architecture did a great job with classifying traffic signs, so I figured it would be a good place to start for this project as it seems that in some ways, the features of the road aren't as detailed as with the traffic signs. 
 
-In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting. 
+I used a mean square error loss function and the adam optimizer to minimize the error between my network's predicted steering measurement and the actual measurement during training.
 
-To combat the overfitting, I modified the model so that ...
+I also preprocessed the data by normalizing the pixel values of each channel of each image to be between -0.5 and 0.5. I then cropped the top 70 pixels and lower 25 pixels from each image because they do not provide any relevant information to the steering angle prediction problem.
 
-Then I ... 
+To provide more training data and to prevent the model from only being able to drive in counter-clockwise circles, I flipped the image from the center camera and the associated steering angle measurement, and appended them to the data set, after preprocessing the images as described above.
 
-The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
+In order to gauge how well the model was working, I shuffled the data and split my image and steering angle data into a training and validation set. 
 
-At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
+The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track. I determined this was due to lack of training data. 
+
+In addition to the images from the center camera, I supplemented my training data by incorporating the images from the left and right cameras. I did this by correcting the steering angle measurement by a fixed value (+0.2/-0.2 for the left and right images, respectively). I also flipped these images and added them to the training data as described above. 
+
+All of this new data was also preprocessed, shuffled, and split into training/validation as described above. My laptop couldn't handle this amount of data in memory all at once, so I used a generator to process the data in batches.
+
+Despite all of these changes, my car did a pretty good job of staying on the road except in a few cases. I decided to tweak my overall architecture (see below).
 
 ####2. Final Model Architecture
 
-The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
-
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
-
-![alt text][image1]
+The final model architecture (model.py lines 137-146) is based on the NVIDIA architecture described in the lecture videos. It is 5 convolutional layers followed by 4 fully connected layers. My car then went around the entire track without issue!
 
 ####3. Creation of the Training Set & Training Process
 
-To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
+I used all of the data that was provided to me (left, right, and center images). A discussion about how I preprocessed, augmented, and divided the data into training and validation sets is described above.
 
+I used the training set to train the model and the validation set to determine if the model was over or under fitting. I first ran my model for 10 epochs and noticed that the validation loss decreased for the first 6 epochs but then started increasing. I decreased the number of epochs to 6 and then retrained my model. See the images below for graphs of the loss functions for these 2 cases.
+
+![alt text][image1]
 ![alt text][image2]
 
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
-
-![alt text][image3]
-![alt text][image4]
-![alt text][image5]
-
-Then I repeated this process on track two in order to get more data points.
-
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
-
-![alt text][image6]
-![alt text][image7]
-
-Etc ....
-
-After the collection process, I had X number of data points. I then preprocessed this data by ...
-
-
-I finally randomly shuffled the data set and put Y% of the data into a validation set. 
-
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
