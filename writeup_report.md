@@ -46,7 +46,7 @@ My model is based on the NVIDIA architecture presented in the lecture videos. It
 I preprocessed the data before running it through the network by first normalizing the pixel values to be between -0.5 and 0.5 and also by cropping the top and bottom of each image. 
 
 ####2. Attempts to reduce overfitting in the model
-
+I split the data into training and validation sets. I used the training set to train the model and the validation set to determine if the model was over or under fitting. I first ran my model for 10 epochs and noticed that the validation loss decreased for the first 6 epochs but then started increasing. I decreased the number of epochs to 6 and then retrained my model. See the images at the end of this report for graphs of the loss functions for these 2 cases.
 
 ####3. Model parameter tuning
 
@@ -54,7 +54,8 @@ The model used an adam optimizer, so the learning rate was not tuned manually.
 
 ####4. Appropriate training data
 
-I used all of the provided images (including left and right images) to train my network (after splitting 20% off for validation).
+I used all of the provided images (including left and right images) to train my network (after splitting 20% off for validation). I also flipped each of the left, right, and center images to augment the training data and help my model generalize to all road conditions.
+
 Note: I did not have a joystick (or even a mouse), so recording my own training data did not seem like it would be beneficial. Plus my network did a pretty good job without the need to create more data.
 
 ###Model Architecture and Training Strategy
@@ -63,7 +64,7 @@ Note: I did not have a joystick (or even a mouse), so recording my own training 
 
 The overall strategy for deriving a model architecture was to follow the approach described in the lecture videos. 
 
-My first step was to use a convolution neural network model similar to the Lenet-5 model from previous lessons (minus the max-pooling). I thought this model might be appropriate because it provides a way inputting images from the simulator into the network and outputting a predicted steering value based on those images. In previous lessons, the Lenet-5 architecture did a great job with classifying traffic signs, so I figured it would be a good place to start for this project as it seems that in some ways, the features of the road aren't as detailed as with the traffic signs. 
+My first step was to use a convolution neural network model similar to the Lenet-5 model from previous lessons (minus the max-pooling). I thought this model might be appropriate because it provides a way inputting images from the simulator into the network and outputting a predicted steering value based on those images. In previous lessons, the Lenet-5 architecture did a great job with classifying traffic signs, so I figured it would be a good place to start for this project.
 
 I used a mean square error loss function and the adam optimizer to minimize the error between my network's predicted steering measurement and the actual measurement during training.
 
@@ -84,6 +85,19 @@ Despite all of these changes, my car did a pretty good job of staying on the roa
 ####2. Final Model Architecture
 
 The final model architecture (model.py lines 137-146) is based on the NVIDIA architecture described in the lecture videos. It is 5 convolutional layers followed by 4 fully connected layers. My car then went around the entire track without issue!
+
+| Layer         		|     Description	        					| 
+|:---------------------:|:---------------------------------------------:| 
+| Input         		      | 65x320x3 color image (cropped from original 160x320x3) | 
+| Convolution 5x5x24     	| 2x2 stride | RELU activation 	|					 
+| Convolution 5x5x36     	| 2x2 stride | RELU activation 	|
+| Convolution 5x5x48     	| 2x2 stride | RELU activation 	|
+| Convolution 3x3x64     	| 1x1 stride | RELU activation 	|
+| Convolution 3x3x64     	| 1x1 stride | RELU activation 	|
+| Fully connected		      | output = 100        					|
+| Fully connected		      | output = 50         					|
+| Fully connected		      | output = 10         					|
+| Fully connected		      | output = 1         					  |
 
 ####3. Creation of the Training Set & Training Process
 
