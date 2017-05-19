@@ -66,19 +66,25 @@ Note: I did not have a joystick (or even a mouse), so recording my own training 
 
 ####1. Solution Design Approach
 
-The overall strategy for deriving a model architecture was to ...
+The overall strategy for deriving a model architecture was to follow the approach described in the lecture videos. 
 
-My first step was to use a convolution neural network model similar to the ... I thought this model might be appropriate because ...
+My first step was to use a convolution neural network model similar to the Lenet-5 model from previous lessons (minus the max-pooling). I thought this model might be appropriate because it provides a way inputting images from the simulator into the network and outputting a predicted steering value based on those images. In previous lessons, the Lenet-5 architecture did a great job with classifying traffic signs, so I figured it would be a good place to start for this project as it seems that in some ways, the features of the road aren't as detailed as with the traffic signs. 
 
-In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting. 
+I used a mean square error loss function and the adam optimizer to minimize the error between my network's predicted steering measurement and the actual measurement during training.
 
-To combat the overfitting, I modified the model so that ...
+I also preprocessed the data by normalizing the pixel values of each channel of each image to be between -0.5 and 0.5. I then cropped the top 70 pixels and lower 25 pixels from each image because they do not provide any relevant information to the steering angle prediction problem.
 
-Then I ... 
+To provide more training data and to prevent the model from only being able to drive in counter-clockwise circles, I flipped the image from the center camera and the associated steering angle measurement, and appended them to the data set, after preprocessing the images as described above.
 
-The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
+In order to gauge how well the model was working, I shuffled the data and split my image and steering angle data into a training and validation set. 
 
-At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
+The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track. I determined this was due to lack of training data. 
+
+In addition to the images from the center camera, I supplemented my training data by incorporating the images from the left and right cameras. I did this by correcting the steering angle measurement by a fixed value (+0.2/-0.2 for the left and right images, respectively). I also flipped these images and added them to the training data as described above. 
+
+All of this new data was also preprocessed, shuffled, and split into training/validation as described above. My laptop couldn't handle this amount of data in memory all at once, so I used a generator to process the data in batches.
+
+At the end of the process, the vehicle was able to drive autonomously around the track without leaving the road.
 
 ####2. Final Model Architecture
 
