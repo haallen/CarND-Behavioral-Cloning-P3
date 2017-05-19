@@ -10,13 +10,8 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[image1]: ./overfitting.png "Overfitting"
+[image2]: ./loss.png "Final loss function"
 
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -84,40 +79,18 @@ In addition to the images from the center camera, I supplemented my training dat
 
 All of this new data was also preprocessed, shuffled, and split into training/validation as described above. My laptop couldn't handle this amount of data in memory all at once, so I used a generator to process the data in batches.
 
-At the end of the process, the vehicle was able to drive autonomously around the track without leaving the road.
+Despite all of these changes, my car did a pretty good job of staying on the road except in a few cases. I decided to tweak my overall architecture (see below).
 
 ####2. Final Model Architecture
 
-The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
-
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
-
-![alt text][image1]
+The final model architecture (model.py lines 137-146) is based on the NVIDIA architecture described in the lecture videos. It is 5 convolutional layers followed by 4 fully connected layers. My car then went around the entire track without issue!
 
 ####3. Creation of the Training Set & Training Process
 
-To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
+I used all of the data that was provided to me (left, right, and center images). A discussion about how I preprocessed, augmented, and divided the data into training and validation sets is described above.
 
+I used the training set to train the model and the validation set to determine if the model was over or under fitting. I first ran my model for 10 epochs and noticed that the validation loss decreased for the first 6 epochs but then started increasing. I decreased the number of epochs to 6 and then retrained my model. See the images below for graphs of the loss functions for these 2 cases.
+
+![alt text][image1]
 ![alt text][image2]
 
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
-
-![alt text][image3]
-![alt text][image4]
-![alt text][image5]
-
-Then I repeated this process on track two in order to get more data points.
-
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
-
-![alt text][image6]
-![alt text][image7]
-
-Etc ....
-
-After the collection process, I had X number of data points. I then preprocessed this data by ...
-
-
-I finally randomly shuffled the data set and put Y% of the data into a validation set. 
-
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
