@@ -12,6 +12,12 @@ The goals / steps of this project are the following:
 
 [image1]: ./overfitting.png "Overfitting"
 [image2]: ./loss.png "Final loss function"
+[image3]: ./image_0_angle_0.0.png "Center camera no flip"
+[image4]: ./image_1_angle_-0.0.png "Center camera flipped"
+[image5]: ./image_2_angle_0.2.png "Left camera no flip"
+[image6]: ./image_3_angle_-0.2.png "Left camera flipped"
+[image7]: ./image_4_angle_-0.2.png "Right camera no flip"
+[image8]: ./image_5_angle_0.2.png "Left camera flipped"
 
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -55,7 +61,7 @@ The model used an adam optimizer, so the learning rate was not tuned manually.
 
 ####4. Appropriate training data
 
-I used all of the provided images (including left and right images) to train my network (after splitting 20% off for validation). I also flipped each of the left, right, and center images to augment the training data and help my model generalize to all road conditions.
+I used all of the provided images (including left and right images) to train my network (after splitting 20% off for validation). I also flipped each of the left, right, and center images to augment the training data and help my model generalize to all road conditions. Example images of the augmented data are at the bottom of the report.
 
 Note: I did not have a joystick (or even a mouse), so recording my own training data did not seem like it would be beneficial. Plus my network did a pretty good job without the need to create more data.
 
@@ -108,4 +114,18 @@ I used the training set to train the model and the validation set to determine i
 
 ![alt text][image1]
 ![alt text][image2]
+
+Below are some example images of the training data before the conversion to greyscale and cropping. 
+ - original center camera image
+ ![alt text][image3]
+ - center camera image flipped
+ ![alt text][image4]
+  - original left camera image
+ ![alt text][image5]
+ - left camera image flipped
+ ![alt text][image6]
+  - original right camera image
+ ![alt text][image7]
+ - right camera image flipped
+ ![alt text][image8]
 
