@@ -12,6 +12,12 @@ The goals / steps of this project are the following:
 
 [image1]: ./overfitting.png "Overfitting"
 [image2]: ./loss.png "Final loss function"
+[image3]: ./image_0_angle_0.0.png "Center camera no flip"
+[image4]: ./image_1_angle_-0.0.png "Center camera flipped"
+[image5]: ./image_2_angle_0.2.png "Left camera no flip"
+[image6]: ./image_3_angle_-0.2.png "Left camera flipped"
+[image7]: ./image_4_angle_-0.2.png "Right camera no flip"
+[image8]: ./image_5_angle_0.2.png "Left camera flipped"
 
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -47,7 +53,12 @@ My model is based on the NVIDIA architecture presented in the lecture videos. It
 I preprocessed the data before running it through the network by first normalizing the pixel values to be between -0.5 and 0.5 and also by cropping the top and bottom of each image. 
 
 ####2. Attempts to reduce overfitting in the model
-I split the data into training and validation sets. I used the training set to train the model and the validation set to determine if the model was over or under fitting. I first ran my model for 10 epochs and noticed that the validation loss decreased for the first 6 epochs but then started increasing. I decreased the number of epochs to 6 and then retrained my model. See the images at the end of this report for graphs of the loss functions for these 2 cases.
+
+I split the data into training and validation sets. I used the training set to train the model and the validation set to determine if the model was over or under fitting. 
+
+I employed Keras' ModelCheckpoint and EarlyStopping callbacks to monitor the validation loss and stop training when the loss stops decreasing. 
+
+Additionally, I added some dropout layers in between the fully connected layers with a fairly small (0.1) dropout rate as the my model was overfitting but seemingly not by a lot.
 
 ####3. Model parameter tuning
 
@@ -55,7 +66,7 @@ The model used an adam optimizer, so the learning rate was not tuned manually.
 
 ####4. Appropriate training data
 
-I used all of the provided images (including left and right images) to train my network (after splitting 20% off for validation). I also flipped each of the left, right, and center images to augment the training data and help my model generalize to all road conditions.
+I used all of the provided images (including left and right images) to train my network (after splitting 20% off for validation). I also flipped each of the left, right, and center images to augment the training data and help my model generalize to all road conditions. Example images of the augmented data are at the bottom of the report.
 
 Note: I did not have a joystick (or even a mouse), so recording my own training data did not seem like it would be beneficial. Plus my network did a pretty good job without the need to create more data.
 
@@ -96,16 +107,39 @@ The final model architecture (model.py lines 137-146) is based on the NVIDIA arc
 | Convolution 3x3x64     	| 1x1 stride | RELU activation 	|
 | Convolution 3x3x64     	| 1x1 stride | RELU activation 	|
 | Fully connected		      | output = 100        					|
+| Dropout		      | rate = 0.1        					|
 | Fully connected		      | output = 50         					|
+| Dropout		      | rate = 0.1        					|
 | Fully connected		      | output = 10         					|
+| Dropout		      | rate = 0.1        					|
 | Fully connected		      | output = 1         					  |
 
 ####3. Creation of the Training Set & Training Process
 
 I used all of the data that was provided to me (left, right, and center images). A discussion about how I preprocessed, augmented, and divided the data into training and validation sets is described above.
 
-I used the training set to train the model and the validation set to determine if the model was over or under fitting. I first ran my model for 10 epochs and noticed that the validation loss decreased for the first 6 epochs but then started increasing. I decreased the number of epochs to 6 and then retrained my model. See the images below for graphs of the loss functions for these 2 cases.
+I used the training set to train the model and the validation set to determine if the model was over or under fitting. 
+
+I employed Keras' ModelCheckpoint and EarlyStopping callbacks to monitor the validation loss and stop training when the loss stops decreasing. 
+
+Additionally, I added some dropout layers in between the fully connected layers with a fairly small (0.1) dropout rate as the my model was overfitting but seemingly not by a lot. 
+
+The first chart below shows training and validation loss without early stopping or dropout. The second chart shows the losses for the chosen model
 
 ![alt text][image1]
 ![alt text][image2]
+
+Below are some example images of the training data before the conversion to greyscale and cropping. 
+ - original center camera image
+ ![alt text][image3]
+ - center camera image flipped
+ ![alt text][image4]
+  - original left camera image
+ ![alt text][image5]
+ - left camera image flipped
+ ![alt text][image6]
+  - original right camera image
+ ![alt text][image7]
+ - right camera image flipped
+ ![alt text][image8]
 
