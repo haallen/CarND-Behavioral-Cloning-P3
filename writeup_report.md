@@ -10,8 +10,8 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./overfitting.png "Overfitting"
-[image2]: ./loss.png "Final loss function"
+[image1]: ./loss_no_dropout.png "Loss before dropout layers applied"
+[image2]: ./loss_trained_model.png "Final loss function"
 [image3]: ./image_0_angle_0.0.png "Center camera no flip"
 [image4]: ./image_1_angle_-0.0.png "Center camera flipped"
 [image5]: ./image_2_angle_0.2.png "Left camera no flip"
@@ -32,7 +32,7 @@ My project includes the following files:
 * drive.py for driving the car in autonomous mode
 * model.h5 containing a trained convolution neural network 
 * writeup_report.md or writeup_report.pdf summarizing the results
-* run1.mp4 a video of my car driving a lap around the track autonomously
+* video.mp4 a video of my car driving a lap around the track autonomously
 
 ####2. Submission includes functional code
 Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing 
@@ -111,7 +111,6 @@ The final model architecture (model.py lines 137-146) is based on the NVIDIA arc
 | Fully connected		      | output = 50         					|
 | Dropout		      | rate = 0.1        					|
 | Fully connected		      | output = 10         					|
-| Dropout		      | rate = 0.1        					|
 | Fully connected		      | output = 1         					  |
 
 ####3. Creation of the Training Set & Training Process
@@ -124,7 +123,7 @@ I employed Keras' ModelCheckpoint and EarlyStopping callbacks to monitor the val
 
 Additionally, I added some dropout layers in between the fully connected layers with a fairly small (0.1) dropout rate as the my model was overfitting but seemingly not by a lot. 
 
-The first chart below shows training and validation loss without early stopping or dropout. The second chart shows the losses for the chosen model
+The first chart below shows training and validation loss without dropout. The second chart shows the losses for the chosen model.
 
 ![alt text][image1]
 ![alt text][image2]
