@@ -16,6 +16,9 @@ import numpy as np
 
 #path to data
 dpath = '/Users/hope/Documents/python/carND/CarND-Behavioral-Cloning-P3/data'
+
+modelpath = '/Users/hope/Documents/python/carND/CarND-Behavioral-Cloning-P3/model.h5'
+
 """
 Read in driving_log,csv and create the 'lines' list
 Each item in the 'lines' list corresponds to a moment in time at which data was 
@@ -91,12 +94,19 @@ def generator(samples, batch_size=32):
                 angles.extend([steering_center, steering_left, steering_right])
 
                 #read in center, left and right images & append to images list
-                img_center = cv2.imread(dpath + '/IMG/' + 
+                #convert images from BGR to RGB
+                img_center_o = cv2.imread(dpath + '/IMG/' + 
                                         batch_sample[0].split('/')[-1])
-                img_left   = cv2.imread(dpath + '/IMG/' + 
+                img_center = cv2.cvtColor(img_center_o, cv2.COLOR_BGR2RGB)
+                
+                img_left_o   = cv2.imread(dpath + '/IMG/' + 
                                         batch_sample[1].split('/')[-1])
-                img_right  = cv2.imread(dpath + '/IMG/' + 
+                img_left = cv2.cvtColor(img_left_o, cv2.COLOR_BGR2RGB)
+                
+                img_right_o  = cv2.imread(dpath + '/IMG/' + 
                                         batch_sample[2].split('/')[-1])
+                img_right = cv2.cvtColor(img_right_o, cv2.COLOR_BGR2RGB)
+                
                 images.extend([img_center, img_left, img_right])
                 
                 #flip the images and corresponding steering angles and append
@@ -115,8 +125,9 @@ train_generator = generator(train_samples, batch_size=32)
 validation_generator = generator(validation_samples, batch_size=32)
 
 from keras.models import Sequential
-from keras.layers import Flatten, Dense, Lambda, Cropping2D
+from keras.layers import Flatten, Dense, Lambda, Cropping2D, Dropout
 from keras.layers.convolutional import Convolution2D
+from keras.callbacks import EarlyStopping, ModelCheckpoint
 
 #set up regression network 
 model = Sequential()
@@ -141,7 +152,9 @@ model.add(Convolution2D(64, 3, 3, activation='relu'))
 model.add(Convolution2D(64, 3, 3, activation='relu'))
 model.add(Flatten())
 model.add(Dense(100))
+model.add(Dropout(0.1))
 model.add(Dense(50))
+model.add(Dropout(0.1))
 model.add(Dense(10))
 model.add(Dense(1))
 
@@ -149,11 +162,17 @@ model.add(Dense(1))
 #minimize error between predicted steering measurement and actual measurement
 model.compile(loss='mse', optimizer='adam')
 
+#stop training if val_loss is no longer decreasing
+earlyStopping=EarlyStopping(monitor='val_loss', min_delta=0, patience=0, verbose=0, mode='auto')
+#save the model every epoch
+checkpoint = ModelCheckpoint(modelpath, monitor='val_loss', verbose=0, save_best_only=True, mode='auto')
+
 history_object=model.fit_generator(train_generator, 
                                    samples_per_epoch=len(train_samples)*6, 
                                    validation_data=validation_generator, 
                                    nb_val_samples=len(validation_samples)*6, 
-                                   nb_epoch=6)
+                                   nb_epoch=10,
+                                   callbacks=[earlyStopping,checkpoint])
 
 #create a plot of MSE loss vs epoch for training and validation runs
 import matplotlib.pyplot as plt
@@ -171,4 +190,4 @@ plt.legend(['training set', 'validation set'], loc='upper right')
 plt.show()
 
 #save the model
-model.save('model.h5')
+#model.save('model.h5')
